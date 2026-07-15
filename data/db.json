@@ -1,0 +1,247 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin Manager",
+      "email": "admin@basicbox.in",
+      "password": "admin",
+      "role": "admin",
+      "phone": "9876543210",
+      "created_at": "2026-07-05T06:28:13.252Z"
+    },
+    {
+      "id": 2,
+      "name": "Ramu K",
+      "email": "ramu@basicbox.in",
+      "password": "ramu",
+      "role": "merchant",
+      "phone": "9876543211",
+      "created_at": "2026-07-05T06:28:13.255Z"
+    },
+    {
+      "id": 3,
+      "name": "Sri Vidya",
+      "email": "sri@basicbox.in",
+      "password": "sri",
+      "role": "merchant",
+      "phone": "9876543212",
+      "created_at": "2026-07-05T06:28:13.257Z"
+    },
+    {
+      "id": 4,
+      "name": "Raagul",
+      "email": "raagul@gmail.com",
+      "password": "password",
+      "role": "user",
+      "phone": "9876543213",
+      "default_address": "SMVEC Hostel, Room 304, Kalitheerthalkuppam, Madagadipet",
+      "default_landmark": "Sri Manakula Vinayagar Engineering College",
+      "created_at": "2026-07-05T06:28:13.259Z"
+    },
+    {
+      "id": 5,
+      "name": "Guest User",
+      "email": "guest@gmail.com",
+      "password": "guest",
+      "role": "user",
+      "phone": "9876543214",
+      "default_address": "Gangai Amman Kovil Street, Madagadipet",
+      "default_landmark": "Gangai Amman Temple",
+      "created_at": "2026-07-05T06:28:13.260Z"
+    }
+  ],
+  "merchants": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "store_name": "Ramu Grocery & Snacks",
+      "description": "Fastest snacks, chips, instant noodles and drinks delivery in Madagadipet Bazar.",
+      "address": "No. 12, Main Road, Madagadipet Bazar",
+      "image_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80",
+      "status": "approved",
+      "created_at": "2026-07-05T06:28:13.261Z"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "store_name": "Sri Fresh Dairy & Veggies",
+      "description": "Farm-fresh milk, paneer, curd, butter, and daily vegetables delivered fresh.",
+      "address": "Opposite SMVEC Gate, Kalitheerthalkuppam, Madagadipet",
+      "image_url": "https://images.unsplash.com/photo-1543083503-4c9254b73b22?w=600&q=80",
+      "status": "approved",
+      "created_at": "2026-07-05T06:28:13.263Z"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Lays Classic Salted Chips",
+      "description": "Crispy potato chips, perfect for study breaks.",
+      "price": 20,
+      "stock": 50,
+      "category": "Munchies",
+      "image_url": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.264Z"
+    },
+    {
+      "id": 2,
+      "name": "Bingo Mad Angles Achaari",
+      "description": "Tangy and crunchy triangular snack.",
+      "price": 20,
+      "stock": 40,
+      "category": "Munchies",
+      "image_url": "https://images.unsplash.com/photo-1600952841320-db92ec4047ca?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.265Z"
+    },
+    {
+      "id": 3,
+      "name": "Coca-Cola Can 300ml",
+      "description": "Ice cold carbonated soft drink.",
+      "price": 40,
+      "stock": 30,
+      "category": "Beverages",
+      "image_url": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.266Z"
+    },
+    {
+      "id": 4,
+      "name": "Red Bull Energy Drink",
+      "description": "Vitalizes body and mind for late-night exams.",
+      "price": 125,
+      "stock": 25,
+      "category": "Beverages",
+      "image_url": "https://images.unsplash.com/photo-1622543956221-15740c94a5e6?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.267Z"
+    },
+    {
+      "id": 5,
+      "name": "Maggi 2-Minute Masala Noodles",
+      "description": "Instant snack favorite for college hostel rooms.",
+      "price": 14,
+      "stock": 120,
+      "category": "Instant Food",
+      "image_url": "https://images.unsplash.com/photo-1612927601601-6638404737ce?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.269Z"
+    },
+    {
+      "id": 6,
+      "name": "Oreo Chocolate Biscuit",
+      "description": "Twist, Lick, Dunk! Sweet cream biscuits.",
+      "price": 30,
+      "stock": 60,
+      "category": "Munchies",
+      "image_url": "https://images.unsplash.com/photo-1558961359-fa3f2001739c?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.270Z"
+    },
+    {
+      "id": 7,
+      "name": "Amul Dark Chocolate Bar",
+      "description": "55% rich cocoa dark chocolate.",
+      "price": 100,
+      "stock": 15,
+      "category": "Munchies",
+      "image_url": "https://images.unsplash.com/photo-1548907040-4d42b52125e0?w=400&q=80",
+      "status": "active",
+      "merchant_id": 1,
+      "created_at": "2026-07-05T06:28:13.272Z"
+    },
+    {
+      "id": 8,
+      "name": "Amul Taaza Toned Milk 500ml",
+      "description": "Fresh toned milk packet, rich in nutrients.",
+      "price": 27,
+      "stock": 60,
+      "category": "Dairy & Bread",
+      "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.273Z"
+    },
+    {
+      "id": 9,
+      "name": "Amul Salted Butter 100g",
+      "description": "Utterly butterly delicious butter.",
+      "price": 58,
+      "stock": 35,
+      "category": "Dairy & Bread",
+      "image_url": "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.274Z"
+    },
+    {
+      "id": 10,
+      "name": "Fresh Paneer 200g",
+      "description": "Soft and fresh cottage cheese cubes.",
+      "price": 90,
+      "stock": 20,
+      "category": "Dairy & Bread",
+      "image_url": "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.275Z"
+    },
+    {
+      "id": 11,
+      "name": "Farm Fresh Tomatoes 1kg",
+      "description": "Local organic red tomatoes.",
+      "price": 35,
+      "stock": 15,
+      "category": "Fruits & Veggies",
+      "image_url": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.276Z"
+    },
+    {
+      "id": 12,
+      "name": "Fresh Red Onions 1kg",
+      "description": "High-quality Indian onions for daily cooking.",
+      "price": 40,
+      "stock": 20,
+      "category": "Fruits & Veggies",
+      "image_url": "https://images.unsplash.com/photo-1508747703725-719ae2c73ee8?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.277Z"
+    },
+    {
+      "id": 13,
+      "name": "Cavendish Bananas 1 Dozen",
+      "description": "Sweet ripe bananas, source of potassium.",
+      "price": 60,
+      "stock": 10,
+      "category": "Fruits & Veggies",
+      "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.278Z"
+    },
+    {
+      "id": 14,
+      "name": "Fresh White Bread 400g",
+      "description": "Soft sliced sandwich bread, baked fresh.",
+      "price": 45,
+      "stock": 15,
+      "category": "Dairy & Bread",
+      "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80",
+      "status": "active",
+      "merchant_id": 2,
+      "created_at": "2026-07-05T06:28:13.279Z"
+    }
+  ],
+  "orders": [],
+  "order_items": []
+}
