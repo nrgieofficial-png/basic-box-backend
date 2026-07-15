@@ -5,7 +5,11 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'drcheckflippy@gmail.com',
     pass: 'wmxe fkes whim srfs'
-  }
+  },
+  // 10-second timeout so it never hangs forever
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
 export const sendOTP = async (toEmail, otpCode) => {
@@ -30,10 +34,9 @@ export const sendOTP = async (toEmail, otpCode) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`OTP sent successfully to ${toEmail}`);
-    return true;
-  } catch (error) {
-    console.error(`Failed to send OTP to ${toEmail}:`, error);
-    return false;
+    console.log(`[MAILER] OTP sent successfully to ${toEmail}`);
+  } catch (err) {
+    console.error(`[MAILER] Failed to send OTP to ${toEmail}:`, err.message);
+    // Don't throw — the OTP is already stored in DB, caller should not crash
   }
 };

@@ -58,7 +58,9 @@ app.post('/api/auth/request-otp', async (req, res) => {
     const expires_at = new Date(Date.now() + 10 * 60000).toISOString();
 
     await DB.insert('otps', { email: email.toLowerCase(), otp, expires_at });
-    await sendOTP(email, otp);
+
+    // Fire-and-forget: respond instantly, email sends in background
+    sendOTP(email, otp).catch(err => console.error('[OTP SEND BG]', err.message));
 
     res.json({ existing: !!existing });
   } catch (err) {
@@ -77,7 +79,10 @@ app.post('/api/auth/verify-otp', async (req, res) => {
       { field: 'email', op: '==', value: normalizedEmail },
       { field: 'otp', op: '==', value: otp }
     ]);
-    if (!otpRecord) return res.status(401).json({ error: 'Invalid OTP' });
+
+    if (!otpRecord) {
+      return res.status(401).json({ error: 'Invalid OTP' });
+    }
     if (new Date(otpRecord.expires_at) < new Date()) return res.status(401).json({ error: 'OTP Expired' });
 
     let user = await DB.findOne('users', [{ field: 'email', op: '==', value: normalizedEmail }]);
