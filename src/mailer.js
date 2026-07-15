@@ -1,7 +1,5 @@
-// Brevo HTTP Email API — works on Render (no SMTP needed)
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = 'nrgie.official@gmail.com';
-const SENDER_NAME = 'Basics Box';
+// Google Apps Script Proxy — 100% free, sends directly from your Gmail, never goes to spam!
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyuawgO_U-rrGcOl0jkFKG7R3-UQIlYpvK4vowDDFuvawKzPKC2om_h86MPmcZgHLd2pA/exec';
 
 export const sendOTP = async (toEmail, otpCode) => {
   const htmlContent = `
@@ -50,31 +48,26 @@ export const sendOTP = async (toEmail, otpCode) => {
   `;
 
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const response = await fetch(GAS_URL, {
       method: 'POST',
       headers: {
-        'api-key': BREVO_API_KEY,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-        to: [{ email: toEmail }],
-        subject: `Basics Box — Your OTP is ${otpCode}`,
-        htmlContent
+        to: toEmail,
+        subject: \`Basics Box — Your OTP is \${otpCode}\`,
+        htmlBody: htmlContent
       })
     });
 
-    if (!response.ok) {
-      const err = await response.json();
-      console.error('[MAILER] ❌ Brevo API error:', JSON.stringify(err));
-      return;
-    }
-
     const data = await response.json();
-    console.log(`[MAILER] ✅ OTP sent to ${toEmail} (messageId: ${data.messageId})`);
+    if (data.success) {
+      console.log(\`[MAILER] ✅ GAS OTP sent to \${toEmail}\`);
+    } else {
+      console.error('[MAILER] ❌ GAS API error:', data.error);
+    }
     return data;
   } catch (err) {
-    console.error(`[MAILER] ❌ Failed to send OTP to ${toEmail}:`, err.message);
+    console.error(\`[MAILER] ❌ Failed to send OTP via GAS to \${toEmail}:\`, err.message);
   }
 };
