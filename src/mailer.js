@@ -62,12 +62,12 @@ export const sendOTP = async (toEmail, otpCode) => {
 
     const data = await response.json();
     if (data.success) {
-      console.log(\`[MAILER] ✅ GAS OTP sent to \${toEmail}\`);
+      console.log(`[MAILER] ✅ GAS OTP sent to ${toEmail}`);
     } else {
       console.error('[MAILER] ❌ GAS API error:', data.error);
     }
     return data;
   } catch (err) {
-    console.error(\`[MAILER] ❌ Failed to send OTP via GAS to \${toEmail}:\`, err.message);
+    console.error(`[MAILER] ❌ Failed to send OTP via GAS to ${toEmail}:`, err.message);
   }
 };
