@@ -1,16 +1,23 @@
 import nodemailer from 'nodemailer';
 
+// Use port 465 (direct SSL) instead of 587 (STARTTLS) — more reliable on cloud platforms
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: 'drcheckflippy@gmail.com',
     pass: 'wmxe fkes whim srfs'
   },
-  // 10-second timeout so it never hangs forever
   connectionTimeout: 10000,
   greetingTimeout: 10000,
-  socketTimeout: 10000
+  socketTimeout: 15000
 });
+
+// Verify SMTP connection on startup
+transporter.verify()
+  .then(() => console.log('[MAILER] ✅ Gmail SMTP connection verified'))
+  .catch(err => console.error('[MAILER] ❌ Gmail SMTP connection FAILED:', err.message));
 
 export const sendOTP = async (toEmail, otpCode) => {
   const mailOptions = {
@@ -33,10 +40,11 @@ export const sendOTP = async (toEmail, otpCode) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`[MAILER] OTP sent successfully to ${toEmail}`);
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[MAILER] ✅ OTP sent to ${toEmail} (messageId: ${info.messageId})`);
+    return info;
   } catch (err) {
-    console.error(`[MAILER] Failed to send OTP to ${toEmail}:`, err.message);
-    // Don't throw — the OTP is already stored in DB, caller should not crash
+    console.error(`[MAILER] ❌ Failed to send OTP to ${toEmail}:`, err.message);
+    // Don't throw — fire-and-forget, app already responded to user
   }
 };
