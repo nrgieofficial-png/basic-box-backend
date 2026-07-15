@@ -55,7 +55,7 @@ export const sendOTP = async (toEmail, otpCode) => {
       },
       body: JSON.stringify({
         to: toEmail,
-        subject: \`Basics Box — Your OTP is \${otpCode}\`,
+        subject: `Basics Box — Your OTP is ${otpCode}`,
         htmlBody: htmlContent
       })
     });
