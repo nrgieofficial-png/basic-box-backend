@@ -587,6 +587,34 @@ app.patch('/api/admin/merchants/:id/status', async (req, res) => {
   }
 });
 
+// Admin: Delete merchant, their user account, and all their products
+app.delete('/api/admin/merchants/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const merchant = await DB.getById('merchants', id);
+    if (!merchant) return res.status(404).json({ error: 'Merchant not found.' });
+
+    // 1. Delete associated user account
+    if (merchant.user_id) {
+      await DB.delete('users', merchant.user_id);
+    }
+    
+    // 2. Delete all products for this merchant
+    const products = await DB.query('products', [{ field: 'merchant_id', op: '==', value: Number(id) }]);
+    for (const p of products) {
+      await DB.delete('products', p.id);
+    }
+
+    // 3. Delete the merchant record
+    await DB.delete('merchants', id);
+
+    res.json({ success: true, message: 'Merchant and products deleted successfully.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
