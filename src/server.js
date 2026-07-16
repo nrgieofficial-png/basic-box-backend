@@ -11,21 +11,8 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
-app.use('/uploads', express.static('uploads'));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = './uploads';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage });
+// Use memory storage — files stored in MongoDB, not on disk (Render wipes disk on restart)
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -33,14 +20,52 @@ app.use((req, res, next) => {
   next();
 });
 
-// Image Upload Endpoint (local storage — no Firebase Storage plan needed)
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No image uploaded' });
+// Image Upload Endpoint — stores in MongoDB so images survive Render restarts
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image uploaded' });
+    }
+    const base64 = req.file.buffer.toString('base64');
+    const mimeType = req.file.mimetype;
+    const record = await DB.insert('files', {
+      data: `data:${mimeType};base64,${base64}`,
+      filename: req.file.originalname,
+      mimetype: mimeType,
+      size: req.file.size
+    });
+    const url = `/api/files/${record.id}`;
+    res.json({ url });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Upload failed' });
   }
-  const url = `/uploads/${req.file.filename}`;
-  res.json({ url });
 });
+
+// Serve uploaded images from MongoDB
+app.get('/api/files/:id', async (req, res) => {
+  try {
+    const file = await DB.getById('files', req.params.id);
+    if (!file || !file.data) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    const matches = file.data.match(/^data:(.+);base64,(.+)$/);
+    if (!matches) {
+      return res.status(500).json({ error: 'Invalid file data' });
+    }
+    const mimeType = matches[1];
+    const buffer = Buffer.from(matches[2], 'base64');
+    res.set('Content-Type', mimeType);
+    res.set('Cache-Control', 'public, max-age=31536000');
+    res.send(buffer);
+  } catch (err) {
+    console.error('File serve error:', err);
+    res.status(500).json({ error: 'Failed to serve file' });
+  }
+});
+
+// Also serve any old local uploads for backwards compatibility
+app.use('/uploads', express.static('uploads'));
 
 // ─────────────────────────────────────────────
 // AUTHENTICATION
@@ -152,9 +177,11 @@ app.post('/api/auth/merchant/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await DB.findOne('users', [{ field: 'email', op: '==', value: email.toLowerCase() }]);
+    const safeEmail = (email || '').trim().toLowerCase();
+    const safePassword = (password || '').trim();
+    const user = await DB.findOne('users', [{ field: 'email', op: '==', value: safeEmail }]);
 
-    if (!user || user.password !== password) {
+    if (!user || (user.password !== password && user.password !== safePassword)) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
