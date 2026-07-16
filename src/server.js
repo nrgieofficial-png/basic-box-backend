@@ -587,6 +587,11 @@ app.patch('/api/admin/merchants/:id/status', async (req, res) => {
   }
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`========================================`);
@@ -594,4 +599,18 @@ app.listen(PORT, () => {
   console.log(`Running locally at: http://localhost:${PORT}`);
   console.log('Database: MongoDB (Mongoose)');
   console.log('========================================');
+
+  // Keep-alive: ping ourselves every 13 minutes to prevent Render from sleeping
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || process.env.RENDER_SERVICE_URL;
+  if (RENDER_URL) {
+    setInterval(async () => {
+      try {
+        await fetch(`${RENDER_URL}/health`);
+        console.log('[KEEP-ALIVE] Pinged self to stay awake');
+      } catch (e) {
+        console.log('[KEEP-ALIVE] Ping failed:', e.message);
+      }
+    }, 13 * 60 * 1000); // Every 13 minutes (Render sleeps at 15)
+    console.log('[KEEP-ALIVE] Self-ping enabled — server will stay awake');
+  }
 });
