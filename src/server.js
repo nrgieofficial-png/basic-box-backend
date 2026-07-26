@@ -316,7 +316,7 @@ app.delete('/api/products/:id', async (req, res) => {
 
 app.post('/api/orders', async (req, res) => {
   try {
-    const { user_id, merchant_id, items, delivery_address, delivery_landmark, total_amount } = req.body;
+    const { user_id, merchant_id, items, delivery_address, delivery_landmark, total_amount, payment_method } = req.body;
     if (!user_id || !merchant_id || !items || !items.length) {
       return res.status(400).json({ error: 'Invalid order request.' });
     }
@@ -336,6 +336,7 @@ app.post('/api/orders', async (req, res) => {
       merchant_id: Number(merchant_id),
       total: Number(total_amount),
       status: 'pending',
+      payment_method: payment_method || 'cod',
       delivery_address: delivery_address || '',
       delivery_landmark: delivery_landmark || '',
       driver_name: driver.name,
